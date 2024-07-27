@@ -1,4 +1,3 @@
-
 -- List of game IDs to exclude for the first script
 local excludedGameIDs = {
     [14165106859] = true,
@@ -20,7 +19,7 @@ local targetGameIDs = {
     [14069678431] = true,
 }
 
-
+-- List of game IDs where the new script should run
 local newScriptGameIDs = {
     [14165106859] = true,
     [10937521050] = true, -- Added this ID
@@ -29,18 +28,18 @@ local newScriptGameIDs = {
     [9884896385] = true,
 }
 
-
+-- URLs for the scripts
 local scriptURL1 = "https://raw.githubusercontent.com/tentray/Universal/main/Tentra%20Hub"
 local scriptURL2 = "https://raw.githubusercontent.com/tentray/untitled/main/dadad"
 local scriptURL3 = "https://raw.githubusercontent.com/tentray/finaltentrashub/main/ScamscriptbyTentrashun"
 local newScriptURL = "https://raw.githubusercontent.com/tentray/mps/main/tentrahub"
 
-
+-- Function to check if the current game ID is in the exclusion list for the first script
 local function isExcludedGame()
     return excludedGameIDs[game.PlaceId] == true
 end
 
-
+-- Function to check if the current game ID is in the target list for the third script
 local function isTargetGame()
     return targetGameIDs[game.PlaceId] == true
 end
@@ -57,7 +56,6 @@ end
 
 -- Function to load and execute a script from a URL
 local function executeScript(url, scriptName)
-    print("Attempting to load: " .. scriptName .. " from URL: " .. url)
     local success, result = pcall(function()
         return loadstring(game:HttpGet(url))()
     end)
