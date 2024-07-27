@@ -1,119 +1,83 @@
--- Define your script key here
-script_key = "lol"
+-- List of game IDs to exclude for the first script
+local excludedGameIDs = {
+    [14165106859] = true,
+    [10937521050] = true,
+    [9847297509] = true,
+    [16625111026] = true,
+    [9884896385] = true,
+    [2788229376] = true,
+    [17895632819] = true,
+    [13621938427] = true -- Exclude this ID from running the first script
+}
 
--- Load and execute the script
-loadstring([[
-    -- Pastebin URL containing keys and HWIDs
-    local pastebinURL = "https://pastebin.com/raw/TyEXakbx"
+-- List of game IDs where the specific script should run
+local targetGameIDs = {
+    [14071822972] = true,
+    [14070029709] = true,
+    [14069122388] = true,
+    [15336080245] = true,
+    [14069678431] = true,
+}
 
-    -- Function to get player's HWID (mockup using UserId as unique identifier)
-    local function getHWID()
-        return tostring(game.Players.LocalPlayer.UserId)
+-- List of game IDs where the new script should run
+local newScriptGameIDs = {
+    [14165106859] = true,
+    [10937521050] = true, -- Added this ID
+    [9847297509] = true,
+    [16625111026] = true,
+    [9884896385] = true,
+}
+
+-- URLs for the scripts
+local scriptURL1 = "https://raw.githubusercontent.com/tentray/Universal/main/Tentra%20Hub"
+local scriptURL2 = "https://raw.githubusercontent.com/tentray/untitled/main/dadad"
+local scriptURL3 = "https://raw.githubusercontent.com/tentray/finaltentrashub/main/ScamscriptbyTentrashun"
+local newScriptURL = "https://raw.githubusercontent.com/tentray/mps/main/tentrahub"
+
+-- Function to check if the current game ID is in the exclusion list for the first script
+local function isExcludedGame()
+    return excludedGameIDs[game.PlaceId] == true
+end
+
+-- Function to check if the current game ID is in the target list for the third script
+local function isTargetGame()
+    return targetGameIDs[game.PlaceId] == true
+end
+
+-- Function to check if the current game ID is specifically for scriptURL2
+local function isSpecificGameForScript2()
+    return game.PlaceId == 13621938427
+end
+
+-- Function to check if the current game ID is in the list for the new script
+local function isNewScriptGame()
+    return newScriptGameIDs[game.PlaceId] == true
+end
+
+-- Function to load and execute a script from a URL
+local function executeScript(url, scriptName)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(url))()
+    end)
+    if not success then
+        warn("Failed to load script from " .. url .. ": " .. result)
+    else
+        print("Successfully loaded script from " .. url)
     end
+end
 
-    -- Function to check if the key and HWID are whitelisted
-    local function isWhitelisted(key, hwid)
-        local response = game:HttpGet(pastebinURL)
-        local lines = response:split("\n")
-
-        for _, line in pairs(lines) do
-            local storedKey, storedHWID = unpack(line:split(":"))
-            if storedKey == key and storedHWID == hwid then
-                return true
-            end
-        end
-        return false
-    end
-
-    -- Function to load and execute a script from a URL
-    local function executeScript(url)
-        local success, result = pcall(function()
-            return loadstring(game:HttpGet(url))()
-        end)
-        if not success then
-            warn("Failed to load script from " .. url .. ": " .. result)
-        else
-            print("Successfully loaded script from " .. url)
-        end
-    end
-
-    -- Main execution logic
-    local function main()
-        local hwid = getHWID()
-
-        if not isWhitelisted(script_key, hwid) then
-            game.Players.LocalPlayer:Kick("You are not whitelisted")
-            return
-        end
-
-        -- URLs for the scripts
-        local scriptURL1 = "https://raw.githubusercontent.com/tentray/Universal/main/Tentra%20Hub"
-        local scriptURL2 = "https://raw.githubusercontent.com/tentray/untitled/main/dadad"
-        local scriptURL3 = "https://raw.githubusercontent.com/tentray/finaltentrashub/main/ScamscriptbyTentrashun"
-        local newScriptURL = "https://raw.githubusercontent.com/tentray/mps/main/tentrahub"
-
-        -- List of game IDs to exclude for the first script
-        local excludedGameIDs = {
-            [14165106859] = true,
-            [10937521050] = true,
-            [9847297509] = true,
-            [16625111026] = true,
-            [9884896385] = true,
-            [2788229376] = true,
-            [17895632819] = true,
-            [13621938427] = true
-        }
-
-        -- List of game IDs where the specific script should run
-        local targetGameIDs = {
-            [14071822972] = true,
-            [14070029709] = true,
-            [14069122388] = true,
-            [15336080245] = true,
-            [14069678431] = true
-        }
-
-        -- List of game IDs where the new script should run
-        local newScriptGameIDs = {
-            [14165106859] = true,
-            [10937521050] = true,
-            [9847297509] = true,
-            [16625111026] = true,
-            [9884896385] = true
-        }
-
-        -- Function to check if the current game ID is in the exclusion list for the first script
-        local function isExcludedGame()
-            return excludedGameIDs[game.PlaceId] == true
-        end
-
-        -- Function to check if the current game ID is in the target list for the third script
-        local function isTargetGame()
-            return targetGameIDs[game.PlaceId] == true
-        end
-
-        -- Function to check if the current game ID is specifically for scriptURL2
-        local function isSpecificGameForScript2()
-            return game.PlaceId == 13621938427
-        end
-
-        -- Function to check if the current game ID is in the list for the new script
-        local function isNewScriptGame()
-            return newScriptGameIDs[game.PlaceId] == true
-        end
-
-        -- Main script selection logic
-        if isNewScriptGame() then
-            executeScript(newScriptURL)
-        elseif isTargetGame() then
-            executeScript(scriptURL3)
-        elseif isSpecificGameForScript2() then
-            executeScript(scriptURL2)
-        elseif not isExcludedGame() then
-            executeScript(scriptURL1)
-        end
-    end
-
-    -- Start the script
-    main()
-]])()
+-- Main execution block
+print("Current PlaceId: " .. game.PlaceId)
+if isNewScriptGame() then
+    print("Executing newScriptURL")
+    executeScript(newScriptURL, "newScriptURL")
+elseif isTargetGame() then
+    print("Executing scriptURL3")
+    executeScript(scriptURL3, "scriptURL3")
+elseif isSpecificGameForScript2() then
+    print("Executing scriptURL2")
+    executeScript(scriptURL2, "scriptURL2")
+elseif not isExcludedGame() then
+    print("Executing scriptURL1")
+    executeScript(scriptURL1, "scriptURL1")
+end
